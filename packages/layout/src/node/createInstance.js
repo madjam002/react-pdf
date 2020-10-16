@@ -19,7 +19,7 @@ const createInstance = element => {
   if (isString(element) || isNumber(element))
     return { type: TextInstance, value: `${element}` };
 
-  if (isNotString(element.type))
+  if (isNotString(element.type) && typeof element.type === 'function')
     return createInstance(element.type(element.props));
 
   const {
@@ -27,10 +27,7 @@ const createInstance = element => {
     props: { style = {}, children = [], ...props },
   } = element;
 
-  const nextChildren = R.compose(
-    R.map(createInstance),
-    castArray,
-  )(children);
+  const nextChildren = R.compose(R.map(createInstance), castArray)(children);
 
   return {
     type,
